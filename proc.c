@@ -496,6 +496,28 @@ kill(int pid)
   return -1;
 }
 
+int
+sys_getppid(void)
+{
+   return myproc()->parent->pid;
+}
+
+int
+sys_getancestor(void)
+{
+   int n;
+   struct proc *p = myproc();
+   if(argint(0, &n) < 0)
+      return -1;
+   for(int i = 0; i < n; i++) {
+      if(p->parent != 0)
+         p = p->parent;
+      else
+         return -1;
+   }
+   return p->pid;
+}
+
 //PAGEBREAK: 36
 // Print a process listing to console.  For debugging.
 // Runs when user types ^P on console.
